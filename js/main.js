@@ -184,15 +184,14 @@ document.addEventListener("DOMContentLoaded", function () {
 					};
 					audio.onerror = function() {
 							if (!audioFileFound) {
-									// soundButton.style.opacity = 0; 
-									soundButton.style.display = "none"; 
+									// soundButton.style.display = "none"; 
 							}
 					};
 			});
 
 			// If no audio file is found, hide the sound button
 			if (!audioFileFound) {
-					soundButton.style.display = "none"; 
+					// soundButton.style.display = "none"; 
 			}
 	}
 });
