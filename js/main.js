@@ -10,192 +10,180 @@ document.addEventListener("DOMContentLoaded", function () {
 	let currentFilter = '';
 	let currentAudio = null; 
 	midColumn.style.display = "none";
-	// soundButton.style.opacity = 0; 
-	// soundButton.style.display = "none"; 
 	prevButton.style.display = "none"; 
 	nextButton.style.display = "none"; 
 	soundButton.textContent = "Play"; 
 
 	buttons.forEach(function (button) {
-			button.addEventListener("click", function () {
-					if (currentAudio) {
-							currentAudio.pause();
-							currentAudio.currentTime = 0; 
-							currentAudio = null; 
-							soundButton.textContent = "Play"; 
-					}
+		button.addEventListener("click", function () {
+			if (currentAudio) {
+				currentAudio.pause();
+				currentAudio.currentTime = 0; 
+				currentAudio = null; 
+				soundButton.textContent = "Play"; 
+			}
 
-					infoText.innerHTML = "";
-					midColumn.style.display = "none"; 
-					currentIndex = 0; 
+			infoText.innerHTML = "";
+			midColumn.style.display = "none"; 
+			currentIndex = 0; 
 
-					if (button.classList.contains('category-btn')) {
-							currentFilter = 'category';
-					} else {
-							currentFilter = 'tag';
-					}
-					const clickedButtonId = button.id;
-					const dataKey = button.classList.contains('category-btn') ? 'category' : 'tag';
-					items = Array.from(document.querySelectorAll(`[data-${dataKey}="${clickedButtonId}"]`));
-					
-					if (items.length === 0) {
-							
-							prevButton.style.display = "none";
-							nextButton.style.display = "none";
-							// soundButton.style.opacity =0; 
-							// soundButton.style.display = "none"; 
-							return; 
-					}
+			if (button.classList.contains('category-btn')) {
+				currentFilter = 'category';
+			} else {
+				currentFilter = 'tag';
+			}
+			const clickedButtonId = button.id;
+			const dataKey = button.classList.contains('category-btn') ? 'category' : 'tag';
+			items = Array.from(document.querySelectorAll(`[data-${dataKey}="${clickedButtonId}"]`));
+			
+			if (items.length === 0) {
+				prevButton.style.display = "none";
+				nextButton.style.display = "none";
+				return; 
+			}
 
-					infoText.innerHTML = "";
-					let buttonsDisplay = items.length > 1 ? 'block' : 'none';
-					prevButton.style.display = buttonsDisplay;
-					nextButton.style.display = buttonsDisplay;
+			infoText.innerHTML = "";
+			let buttonsDisplay = items.length > 1 ? 'block' : 'none';
+			prevButton.style.display = buttonsDisplay;
+			nextButton.style.display = buttonsDisplay;
 
-					// currentFilter === 'category' ? currentIndex = Math.floor(Math.random() * items.length) : currentIndex = 0;
-					appendItem();
-					midColumn.style.display = "flex"; 
-			});
+			appendItem();
+			midColumn.style.display = "flex"; 
+		});
 	});
 
 	prevButton.addEventListener("click", function () {
-			if (items.length > 0) {
-					if (currentAudio) {
-							currentAudio.pause(); 
-							currentAudio.currentTime = 0; 
-							currentAudio = null; 
-							soundButton.textContent = "Play"; 
-					}
-					if (currentIndex > 0) {
-							currentIndex--;
-					} else if (currentFilter === 'tag' && currentIndex == 0) {
-							return false;
-					} else {
-							currentIndex = items.length - 1;
-					}
-					infoText.innerHTML = "";
-					appendItem();
+		if (items.length > 0) {
+			if (currentAudio) {
+				currentAudio.pause(); 
+				currentAudio.currentTime = 0; 
+				currentAudio = null; 
+				soundButton.textContent = "Play"; 
 			}
+			if (currentIndex > 0) {
+				currentIndex--;
+			} else if (currentFilter === 'tag' && currentIndex == 0) {
+				return false;
+			} else {
+				currentIndex = items.length - 1;
+			}
+			infoText.innerHTML = "";
+			appendItem();
+		}
 	});
 
 	nextButton.addEventListener("click", function () {
-			if (items.length > 0) {
-					if (currentAudio) {
-							currentAudio.pause(); 
-							currentAudio.currentTime = 0; 
-							currentAudio = null; 
-							soundButton.textContent = "Play"; 
-					}
-					if (currentIndex < items.length - 1) {
-							currentIndex++;
-					} else if (currentFilter === 'tag' && currentIndex === items.length - 1) {
-							return false;
-					} else {
-							currentIndex = 0;
-					}
-					infoText.innerHTML = "";
-					appendItem();
+		if (items.length > 0) {
+			if (currentAudio) {
+				currentAudio.pause(); 
+				currentAudio.currentTime = 0; 
+				currentAudio = null; 
+				soundButton.textContent = "Play"; 
 			}
+			if (currentIndex < items.length - 1) {
+				currentIndex++;
+			} else if (currentFilter === 'tag' && currentIndex === items.length - 1) {
+				return false;
+			} else {
+				currentIndex = 0;
+			}
+			infoText.innerHTML = "";
+			appendItem();
+		}
 	});
 
 	const imagesCache = {};
-	const soundCache = {};
 
 	function appendItem() {
-			const selectedItem = items[currentIndex].cloneNode(true);
-			const id = selectedItem.getAttribute('id');
-			const ps = selectedItem.querySelectorAll('p');
-			for (const p of ps) {
-					p.style.display = 'none';
-			}
+		const selectedItem = items[currentIndex].cloneNode(true);
+		const id = selectedItem.getAttribute('id');
+		const ps = selectedItem.querySelectorAll('p');
+		for (const p of ps) {
+			p.style.display = 'none';
+		}
 
-			// Load image
-			if (!imagesCache[id]) {
-					const img = new Image();
-					img.src = `images/${id}.png`;
-					img.classList.add('img-content');
-					img.style.display = 'none';
-					img.onload = () => {
-							img.style.display = 'block';
-							imagesCache[id] = img;
-					};
-					img.onerror = () => {
-							const imgJPG = new Image();
-							imgJPG.src = `images/${id}.jpg`;
-							imgJPG.classList.add('img-content');
-							imgJPG.style.display = 'none';
-							imgJPG.onload = () => {
-									imgJPG.style.display = 'block';
-									imagesCache[id] = imgJPG;
-							};
-							imgJPG.onerror = () => {
-									for (const p of ps) {
-											p.style.display = 'block';
-									}
-							}
-							selectedItem.appendChild(imgJPG);
+		// Load image
+		if (!imagesCache[id]) {
+			const img = new Image();
+			img.src = `images/${id}.png`;
+			img.classList.add('img-content');
+			img.style.display = 'none';
+			img.onload = () => {
+				img.style.display = 'block';
+				imagesCache[id] = img;
+			};
+			img.onerror = () => {
+				const imgJPG = new Image();
+				imgJPG.src = `images/${id}.jpg`;
+				imgJPG.classList.add('img-content');
+				imgJPG.style.display = 'none';
+				imgJPG.onload = () => {
+					imgJPG.style.display = 'block';
+					imagesCache[id] = imgJPG;
+				};
+				imgJPG.onerror = () => {
+					for (const p of ps) {
+						p.style.display = 'block';
 					}
-					selectedItem.appendChild(img);
-			} else {
-					selectedItem.appendChild(imagesCache[id]);
+				}
+				selectedItem.appendChild(imgJPG);
 			}
+			selectedItem.appendChild(img);
+		} else {
+			selectedItem.appendChild(imagesCache[id]);
+		}
 
-			infoText.appendChild(selectedItem);
+		infoText.appendChild(selectedItem);
 
+		// Check for audio files in multiple formats
+		const audioFormats = ['mp3', 'wav', 'ogg', 'aac']; // Add other formats as needed
+		let audioFileFound = false;
 
-			if (!soundCache[id]) {
-			// Check for audio files in multiple formats
-			const audioFormats = ['mp3', 'wav', 'ogg', 'aac']; // Add other formats as needed
-			let audioFileFound = false;
+		audioFormats.forEach(format => {
+			const soundFile = `sounds/${id}.${format}`;
+			const audio = new Audio();
+			audio.src = soundFile;
+			audio.preload = 'auto'; // Preload the audio file
+			audio.oncanplaythrough = function() {
+				soundButton.style.display = "block"; 
+				soundButton.onclick = function () {
+					if (currentAudio && currentAudio.src === audio.src) {
+						if (currentAudio.paused) {
+							currentAudio.play(); 
+							soundButton.textContent = "Pause"; 
+						} else {
+							currentAudio.pause(); 
+							soundButton.textContent = "Play"; 
+						}
+					} else {
+						if (currentAudio) {
+							currentAudio.pause(); 
+							currentAudio.currentTime = 0; 
+							soundButton.textContent = "Play"; 
+						}
+						currentAudio = audio; 
+						currentAudio.play().then(() => {
+							soundButton.textContent = "Pause"; 
+						}).catch(error => {
+							console.error("Error playing sound:", error);
+						});
 
-			audioFormats.forEach(format => {
-					const soundFile = `sounds/${id}.${format}`;
-					const audio = new Audio(soundFile);
-					audio.oncanplaythrough = function() {
-							// If the file is available, show the sound button
-							// soundButton.style.opacity = 1; 
-							soundButton.style.display = "block"; 
-							soundButton.onclick = function () {
-									if (currentAudio && currentAudio.src === audio.src) {
-											
-											if (currentAudio.paused) {
-													currentAudio.play(); 
-													soundButton.textContent = "Pause"; // Change text to "Pause"
-											} else {
-													currentAudio.pause(); 
-													soundButton.textContent = "Play"; 
-											}
-									} else {
-											if (currentAudio) {
-													currentAudio.pause(); 
-													currentAudio.currentTime = 0; 
-													soundButton.textContent = "Play"; 
-											}
-											currentAudio = audio; // Set the new audio as current
-											currentAudio.play().then(() => {
-													soundButton.textContent = "Pause"; 
-											}).catch(error => {
-													console.error("Error playing sound:", error);
-											});
-
-											currentAudio.onended = function() {
-													soundButton.textContent = "Play"; // Change text to "Play" when audio ends
-											};
-									}
-							};
-							audioFileFound = true; 
-					};
-					audio.onerror = function() {
-							if (!audioFileFound) {
-									soundButton.style.display = "none"; 
-							}
-					};
-			});
-
-			// If no audio file is found, hide the sound button
-			if (!audioFileFound) {
+						currentAudio.onended = function() {
+							soundButton.textContent = "Play"; 
+						};
+					}
+				};
+				audioFileFound = true; 
+			};
+			audio.onerror = function() {
+				if (!audioFileFound) {
 					soundButton.style.display = "none"; 
-			}
+				}
+			};
+		});
+
+		if (!audioFileFound) {
+			soundButton.style.display = "none"; 
 		}
 	}
 });
