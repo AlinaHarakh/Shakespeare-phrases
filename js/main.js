@@ -179,13 +179,13 @@ document.addEventListener("DOMContentLoaded", function () {
 					};
 					audio.onerror = function() {
 							if (!audioFileFound) {
-									soundButton.style.display = "none";
+									// soundButton.style.display = "none";
 							}
 					};
 			});
 
 			if (!audioFileFound) {
-					soundButton.style.display = "none";
+					// soundButton.style.display = "none";
 			}
 	}
 });
