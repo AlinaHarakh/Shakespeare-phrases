@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+	<meta name="keywords"
+		content="Maxime, Aphorismus, Sprichwort, Ironie, pfiffig, Weisheit, Philosophie, Lebenspraxis, maxim, aphorism, proverb, motivation, inspiration, philosophy" />
+	<meta name="description" content="Kreative Sprüche und ironischer Tiefsinn, Inspiration, Poesie" />
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Shakespeare kreativ in deutschen Dialekten</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Reggae+One&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+</head>
+
+
+<body>
+	<div class="wrapper">
+
+		<header class="header">
+			<div class="header__image">
+				<img class="header__image-img" src="images/top.png" alt="top image">
+			</div>
+		</header>
+
+		<main class="main">
+			<div class="content">
+				<div class="container">
+					<div class="content__inner">
+						<div class="content__column left-column tags">
+							<h2 class="tags__title">
+								Stichwörter
+							</h2>
+							<div class="tags__buttons">
+								<button class="tag-btn" id="anders">Love</button>
+								<button class="tag-btn" id="kurz">better days</button>
+								<button class="tag-btn" id="lachen">truth</button>
+								<button class="tag-btn" id="leben">true</button>
+								<button class="tag-btn" id="lernen">self-love</button>
+								<button class="tag-btn" id="leute">life</button>
+								<button class="tag-btn" id="liebe">world</button>
+								<button class="tag-btn" id="lieber">words</button>
+								<button class="tag-btn" id="lust">men</button>
+								<button class="tag-btn" id="mann">a rose</button>
+								<button class="tag-btn" id="mensch">women</button>
+								<button class="tag-btn" id="morgen">cowards</button>
+								<button class="tag-btn" id="mussen">better days</button>
+								<button class="tag-btn" id="sagen">say</button>
+								<button class="tag-btn" id="schreiben">tongue</button>
+								<button class="tag-btn" id="schweigen">heart</button>
+								<button class="tag-btn" id="seele">soul</button>
+								<button class="tag-btn" id="selbst">self</button>
+								<button class="tag-btn" id="sinn">sin</button>
+								<button class="tag-btn" id="spiegel">mirror</button>
+								<button class="tag-btn" id="sprache">borrow</button>
+								<button class="tag-btn" id="sprechen">speak</button>
+								<button class="tag-btn" id="sterben">die</button>
+								<button class="tag-btn" id="teufel">devil</button>
+								<button class="tag-btn" id="tod">death</button>
+								<button class="tag-btn" id="traum">dream</button>
+								<button class="tag-btn" id="vergangenheit">past</button>
+								<button class="tag-btn" id="vergessen">forget</button>
+								<button class="tag-btn" id="verstand">reason</button>
+								<button class="tag-btn" id="verstehen">understand</button>
+								<button class="tag-btn" id="wahr">real</button>
+								<button class="tag-btn" id="wahrheit">idiot</button>
+								<button class="tag-btn" id="wasser">world</button>
+								<button class="tag-btn" id="welt">think</button>
+								<button class="tag-btn" id="wirklich">anger</button>
+								<button class="tag-btn" id="wissen">wound</button>
+								<button class="tag-btn" id="wollen">will</button>
+								<button class="tag-btn" id="wort">future</button>
+							</div>
+						</div>
+
+						<div class="content__column mid-column info">
+							<div class="info__inner">
+								<button id="sound" class="info__sound" data-sound="">Play</button>
+								<div class="info__text">
+									<!-- Chose a category or a tag -->
+								</div>
+								<div class="info__buttons">
+									<button class="info__prev"></button>
+									<button class="info__next"></button>
+								</div>
+							</div>
+						</div>
+
+						<div class="content__column right-column categories">
+							<h2 class="categories__title">
+								Dialekte
+							</h2>
+							<div class="categories__buttons">
+								<button class="category-btn" id="boa">Boarisch</button>
+								<button class="category-btn" id="koe">Kölsch</button>
+								<button class="category-btn" id="ss">Säggssch</button>
+								<button class="category-btn" id="ufr">Unterfränggisch</button>
+								<button class="category-btn" id="ki">Kiezdeutsch</button>
+								<button class="category-btn" id="st">Starkdeutsch</button>
+								<button class="category-btn" id="sw">Schwäbisch</button>
+								<button class="category-btn" id="fr">Fränggisch</button>
+								<button class="category-btn" id="kur">Kurpfälzisch</button>
+								<button class="category-btn" id="hon">Honsregger</button>
+								<button class="category-btn" id="uw">Uwerstäanisch</button>
+								<button class="category-btn" id="kan">Kanak-Sprach</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<ul id="items"></ul>
+
+</main>
+			<footer class="footer">
+				<div class="container">
+					<p class="footer__inner">
+						&copy; Heringer All rights reserved. Images by Heringer&nbsp;&nbsp;&nbsp|&nbsp;&nbsp;&nbsp</a>
+						<a href="impressum.html">Impressum & Support</a>
+					</p>
+				</div>
+			</footer>
+	</div>
+	<script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+	<script src="js/main.js"></script>
+</body>
+
+</html>
