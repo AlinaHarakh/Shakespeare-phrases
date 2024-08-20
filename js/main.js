@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					prevButton.style.display = buttonsDisplay;
 					nextButton.style.display = buttonsDisplay;
 					if (items.length > 0) {
+							// currentFilter === 'category' ? currentIndex = Math.floor(Math.random() * items.length) : currentIndex = 0;
 							appendItem();
 							midColumn.style.display = "flex";
 					}
@@ -119,57 +120,34 @@ document.addEventListener("DOMContentLoaded", function () {
 			infoText.appendChild(selectedItem);
 
 			// Set up the sound button
+		// 'mp3', 'wav', 'ogg', 'aac'
 			soundButton.style.display = "block";
 			soundButton.textContent = "Play";
 			soundButton.onclick = function () {
-					const audioFormats = ['mp3', 'wav', 'ogg', 'aac'];
-					let audioFileFound = false;
+					const soundFile = `sounds/${id}.mp3`; // Assuming the audio files are in mp3 format
+					if (currentAudio && currentAudio.src === soundFile) {
+							if (currentAudio.paused) {
+									currentAudio.play();
+									soundButton.textContent = "Pause";
+							} else {
+									currentAudio.pause();
+									soundButton.textContent = "Play";
+							}
+					} else {
+							if (currentAudio) {
+									currentAudio.pause();
+									currentAudio.currentTime = 0;
+							}
+							currentAudio = new Audio(soundFile);
+							currentAudio.play().then(() => {
+									soundButton.textContent = "Pause";
+							}).catch(error => {
+									console.error("Error playing sound:", error);
+							});
 
-					for (const format of audioFormats) {
-							const soundFile = `sounds/${id}.${format}`;
-							const audio = new Audio(soundFile);
-
-							audio.oncanplaythrough = function () {
-									if (!audioFileFound) {
-											if (currentAudio && currentAudio.src === audio.src) {
-													if (currentAudio.paused) {
-															currentAudio.play();
-															soundButton.textContent = "Pause";
-													} else {
-															currentAudio.pause();
-															soundButton.textContent = "Play";
-													}
-											} else {
-													if (currentAudio) {
-															currentAudio.pause();
-															currentAudio.currentTime = 0;
-													}
-													currentAudio = audio;
-													currentAudio.play().then(() => {
-															soundButton.textContent = "Pause";
-													}).catch(error => {
-															console.error("Error playing sound:", error);
-													});
-
-													currentAudio.onended = function () {
-															soundButton.textContent = "Play";
-													};
-											}
-											audioFileFound = true;
-									}
+							currentAudio.onended = function () {
+									soundButton.textContent = "Play";
 							};
-
-							audio.onerror = function () {
-									if (!audioFileFound) {
-											console.error(`Error loading sound file: ${soundFile}`);
-									}
-							};
-
-							if (audioFileFound) break;
-					}
-
-					if (!audioFileFound) {
-							console.error("No valid audio file found.");
 					}
 			};
 	}
