@@ -115,6 +115,7 @@ h2 {
 	padding: 7px 15px;
 	width: 86px;
 	text-align: center;
+	z-index: 10000;
 	/* position: absolute;
 	right: 0;
 	top: 0; */
