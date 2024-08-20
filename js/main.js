@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					prevButton.style.display = buttonsDisplay;
 					nextButton.style.display = buttonsDisplay;
 
-					currentFilter === 'category' ? currentIndex = Math.floor(Math.random() * items.length) : currentIndex = 0;
+					// currentFilter === 'category' ? currentIndex = Math.floor(Math.random() * items.length) : currentIndex = 0;
 					appendItem();
 					midColumn.style.display = "flex"; 
 			});
@@ -139,8 +139,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					selectedItem.appendChild(imagesCache[id]);
 			}
 
-			infoText.appendChild(selectedItem);
-
+			
 			// Check for audio files in multiple formats
 			const audioFormats = ['mp3', 'wav', 'ogg', 'aac']; // Add other formats as needed
 			let audioFileFound = false;
@@ -184,15 +183,17 @@ document.addEventListener("DOMContentLoaded", function () {
 					};
 					audio.onerror = function() {
 							if (!audioFileFound) {
-									// soundButton.style.display = "none"; 
+									soundButton.style.display = "none"; 
 							}
 					};
 			});
 
 			// If no audio file is found, hide the sound button
 			if (!audioFileFound) {
-					// soundButton.style.display = "none"; 
+					soundButton.style.display = "none"; 
 			}
+			infoText.appendChild(selectedItem);
+
 	}
 });
 
