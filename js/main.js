@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			soundButton.style.display = "block";
 			soundButton.textContent = "Play";
 			soundButton.onclick = function () {
-					const soundFile = `sounds/${id}.mp3`; // Assuming the audio files are in mp3 format
+					const soundFile = `sounds/${id}.wav`; // Assuming the audio files are in mp3 format
 					if (currentAudio && currentAudio.src === soundFile) {
 							if (currentAudio.paused) {
 									currentAudio.play();
