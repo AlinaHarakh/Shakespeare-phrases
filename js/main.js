@@ -191,7 +191,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 			// If no audio file is found, hide the sound button
 			if (!audioFileFound) {
-					soundButton.style.display = "none"; 
+					// soundButton.style.display = "none"; 
 			}
 	}
 });
