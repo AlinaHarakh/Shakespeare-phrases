@@ -99,6 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	});
 
 	const imagesCache = {};
+	const soundCache = {};
 
 	function appendItem() {
 			const selectedItem = items[currentIndex].cloneNode(true);
@@ -139,7 +140,10 @@ document.addEventListener("DOMContentLoaded", function () {
 					selectedItem.appendChild(imagesCache[id]);
 			}
 
-			
+			infoText.appendChild(selectedItem);
+
+
+			if (!soundCache[id]) {
 			// Check for audio files in multiple formats
 			const audioFormats = ['mp3', 'wav', 'ogg', 'aac']; // Add other formats as needed
 			let audioFileFound = false;
@@ -192,8 +196,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			if (!audioFileFound) {
 					soundButton.style.display = "none"; 
 			}
-			infoText.appendChild(selectedItem);
-
+		}
 	}
 });
 
