@@ -167,6 +167,7 @@ h2 {
 }
 .right-column {
 	max-width: 210px;
+	min-width: 165px;
 	height: 412px; 
   overflow-y: auto;
 }
