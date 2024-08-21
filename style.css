@@ -100,7 +100,7 @@ h2 {
 	padding: 10px 38px 10px;
 	min-height: 700px;
 	position: relative;
-	max-width: 1350px;
+	max-width: 1000px;
 }
 .info-item {
 	display: flex;
@@ -207,6 +207,10 @@ h2 {
 	align-items: center;
 	color: #585454;
 	font-size: 14px;
+}
+.undefined {
+	/* background-color: #890505; */
+	height: 15px;
 }
 @media(max-width: 1200px) {
 	.content__inner {
