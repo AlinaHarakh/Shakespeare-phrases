@@ -4,35 +4,37 @@ document.addEventListener("DOMContentLoaded", function () {
 	const midColumn = document.querySelector(".mid-column");
 	const prevButton = document.querySelector(".info__prev");
 	const nextButton = document.querySelector(".info__next");
-	const soundButton = document.querySelector(".info__sound");
 	let currentIndex = 0;
 	let items = [];
 	let currentFilter = '';
-	let currentAudio = null;
-
+	let currentAudio = null; // Переменная для текущего аудио
+	const audioCache = {}; // Кэш для аудиофайлов
 	midColumn.style.display = "none";
 
 	buttons.forEach(function (button) {
 			button.addEventListener("click", function () {
+					stopAndResetAudio(); // Остановка аудио при нажатии на другую кнопку
 					infoText.innerHTML = "";
-
 					if (items.length > 0) {
 							midColumn.style.display = "flex";
 							midColumn.scrollIntoView({ behavior: 'smooth' });
 					}
-					if (button.classList.contains('category-btn')) {
-							currentFilter = 'category';
-					} else {
-							currentFilter = 'tag';
-					}
+					currentFilter = button.classList.contains('category-btn') ? 'category' : 'tag';
 					const clickedButtonId = button.id;
 					const dataKey = button.classList.contains('category-btn') ? 'category' : 'tag';
 					items = Array.from(document.querySelectorAll(`[data-${dataKey}="${clickedButtonId}"]`));
-
 					infoText.innerHTML = "";
 					let buttonsDisplay = items.length > 1 ? 'block' : 'none';
 					prevButton.style.display = buttonsDisplay;
 					nextButton.style.display = buttonsDisplay;
+
+					// Если нет элементов, скрываем кнопки и выходим
+					if (items.length === 0) {
+							prevButton.style.display = 'none';
+							nextButton.style.display = 'none';
+							return;
+					}
+
 					if (items.length > 0) {
 							// currentFilter === 'category' ? currentIndex = Math.floor(Math.random() * items.length) : currentIndex = 0;
 							appendItem();
@@ -42,6 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	});
 
 	prevButton.addEventListener("click", function () {
+			stopAndResetAudio(); // Остановка аудио при нажатии на кнопку "Предыдущий"
 			if (items.length > 0 && currentIndex > 0) {
 					currentIndex--;
 			} else if (currentFilter === 'tag' && currentIndex == 0) {
@@ -54,6 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	});
 
 	nextButton.addEventListener("click", function () {
+			stopAndResetAudio(); // Остановка аудио при нажатии на кнопку "Следующий"
 			if (items.length > 0 && currentIndex < items.length - 1) {
 					currentIndex++;
 			} else if (currentFilter === 'tag' && currentIndex === items.length - 1) {
@@ -66,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	});
 
 	const imagesCache = {};
-
+	
 	function appendItem() {
 			const selectedItem = items[currentIndex].cloneNode(true);
 			const id = selectedItem.getAttribute('id');
@@ -75,81 +79,76 @@ document.addEventListener("DOMContentLoaded", function () {
 					p.style.display = 'none';
 			}
 
+			// Создаем кнопку для воспроизведения звука
+			const soundButton = document.createElement('button');
+			soundButton.className = 'info__sound';
+			soundButton.textContent = 'Play';
+			selectedItem.appendChild(soundButton);
+
+			soundButton.onclick = function () {
+					const soundFile = `sounds/${id}.wav`; // Путь к аудиофайлу
+
+					if (audioCache[soundFile]) {
+							// Если аудиофайл уже в кэше
+							currentAudio = audioCache[soundFile];
+					} else {
+							// Если это новый аудиофайл, создаем новый объект Audio и кэшируем его
+							currentAudio = new Audio(soundFile);
+							audioCache[soundFile] = currentAudio; // Сохраняем в кэше
+					}
+
+					if (currentAudio.paused) {
+							currentAudio.play();
+							soundButton.textContent = 'Pause'; // Меняем текст на "Pause"
+					} else {
+							currentAudio.pause();
+							soundButton.textContent = 'Play'; // Меняем текст на "Play"
+					}
+
+					currentAudio.onended = function () {
+							soundButton.textContent = 'Play'; // Меняем текст кнопки на "Play" при завершении
+					};
+			};
+
 			if (!imagesCache[id]) {
 					const img = new Image();
 					img.src = `images/${id}.png`;
 					img.classList.add('img-content');
 					img.style.display = 'none';
-
 					img.onload = () => {
 							img.style.display = 'block';
 							imagesCache[id] = img;
-							const ps = selectedItem.querySelectorAll('p');
-							for (const p of ps) {
-									p.style.display = 'none';
-							}
 					};
-
 					img.onerror = () => {
 							const imgJPG = new Image();
 							imgJPG.src = `images/${id}.jpg`;
 							imgJPG.classList.add('img-content');
 							imgJPG.style.display = 'none';
-
 							imgJPG.onload = () => {
 									imgJPG.style.display = 'block';
 									imagesCache[id] = imgJPG;
-									const ps = selectedItem.querySelectorAll('p');
-									for (const p of ps) {
-											p.style.display = 'none';
-									}
 							};
-
 							imgJPG.onerror = () => {
 									for (const p of ps) {
 											p.style.display = 'block';
 									}
-							}
+							};
 							selectedItem.appendChild(imgJPG);
-					}
+					};
 					selectedItem.appendChild(img);
 			} else {
 					selectedItem.appendChild(imagesCache[id]);
 			}
 
 			infoText.appendChild(selectedItem);
+	}
 
-			// Set up the sound button
-		// 'mp3', 'wav', 'ogg', 'aac'
-			soundButton.style.display = "block";
-			soundButton.textContent = "Play";
-			soundButton.onclick = function () {
-					const soundFile = `sounds/${id}.wav`; // Assuming the audio files are in mp3 format
-					if (currentAudio && currentAudio.src === soundFile) {
-							if (currentAudio.paused) {
-									currentAudio.play();
-									soundButton.textContent = "Pause";
-							} else {
-									currentAudio.pause();
-									soundButton.textContent = "Play";
-							}
-					} else {
-							if (currentAudio) {
-									currentAudio.pause();
-									currentAudio.currentTime = 0;
-							}
-							currentAudio = new Audio(soundFile);
-							currentAudio.play().then(() => {
-									soundButton.textContent = "Pause";
-							}).catch(error => {
-									console.error("Error playing sound:", error);
-							});
-
-							currentAudio.onended = function () {
-									soundButton.textContent = "Play";
-							};
-					}
-			};
+	function stopAndResetAudio() {
+			if (currentAudio) {
+					currentAudio.pause(); // Остановить аудио
+					currentAudio.currentTime = 0; // Сбросить аудио
+					currentAudio = null; // Сбросить текущий аудио
+			}
 	}
 });
 
@@ -186,7 +185,6 @@ document.addEventListener("DOMContentLoaded", function () {
 					li.innerHTML = content;
 					items.appendChild(li);
 			});
-
 			return fetchTags();
 	}).then(tags => {
 			for (const tag of tags) {
@@ -206,23 +204,17 @@ document.addEventListener("DOMContentLoaded", function () {
 							.then(response => response.text())
 							.then(text => {
 									const lines = text.split('\n');
-
 									const arrayMap = new Map();
-
 									lines.forEach(line => {
 											const words = line.trim().split(' ');
 											const arrayName = String(words[0]).toLowerCase();
 											const arrayContent = words.slice(1).join(' ');
-
 											if (!arrayMap.has(arrayName)) {
 													arrayMap.set(arrayName, []);
 											}
-
 											arrayMap.get(arrayName).push(arrayContent);
 									});
-
 									const resultArray = Array.from(arrayMap, ([name, content]) => ({ name, content }));
-
 									resolve(resultArray);
 							})
 							.catch(error => {

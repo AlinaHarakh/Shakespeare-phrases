@@ -38,7 +38,7 @@ h2 {
 	margin: 0;
 }
 .container {
-	max-width: 1600px;
+	max-width: 1800px;
 	margin: 0px auto;
 	padding: 0 10px;
 }
@@ -100,7 +100,7 @@ h2 {
 	padding: 10px 38px 10px;
 	min-height: 700px;
 	position: relative;
-	max-width: 1000px;
+	max-width: 1190px;
 }
 .info-item {
 	display: flex;
@@ -116,11 +116,11 @@ h2 {
 	width: 86px;
 	text-align: center;
 	z-index: 10000;
-	/* position: absolute;
+	position: absolute;
 	right: 0;
-	top: 0; */
-	/* display: none; */
+	top: 0; 
 }
+
 .info__inner {
 	max-width: fit-content;
 }
