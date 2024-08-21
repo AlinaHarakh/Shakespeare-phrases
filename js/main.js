@@ -7,13 +7,13 @@ document.addEventListener("DOMContentLoaded", function () {
 	let currentIndex = 0;
 	let items = [];
 	let currentFilter = '';
-	let currentAudio = null; // Переменная для текущего аудио
-	const audioCache = {}; // Кэш для аудиофайлов
+	let currentAudio = null; 
+	const audioCache = {}; 
 	midColumn.style.display = "none";
 
 	buttons.forEach(function (button) {
 			button.addEventListener("click", function () {
-					stopAndResetAudio(); // Остановка аудио при нажатии на другую кнопку
+					stopAndResetAudio();
 					infoText.innerHTML = "";
 					if (items.length > 0) {
 							midColumn.style.display = "flex";
@@ -28,15 +28,13 @@ document.addEventListener("DOMContentLoaded", function () {
 					prevButton.style.display = buttonsDisplay;
 					nextButton.style.display = buttonsDisplay;
 
-					// Если нет элементов, скрываем кнопки и выходим
 					if (items.length === 0) {
 							prevButton.style.display = 'none';
 							nextButton.style.display = 'none';
 							return;
 					}
-
 					if (items.length > 0) {
-							// currentFilter === 'category' ? currentIndex = Math.floor(Math.random() * items.length) : currentIndex = 0;
+						currentFilter === 'category' ? currentIndex = Math.floor(Math.random() * items.length) : currentIndex = 0;
 							appendItem();
 							midColumn.style.display = "flex";
 					}
@@ -44,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	});
 
 	prevButton.addEventListener("click", function () {
-			stopAndResetAudio(); // Остановка аудио при нажатии на кнопку "Предыдущий"
+			stopAndResetAudio(); 
 			if (items.length > 0 && currentIndex > 0) {
 					currentIndex--;
 			} else if (currentFilter === 'tag' && currentIndex == 0) {
@@ -57,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	});
 
 	nextButton.addEventListener("click", function () {
-			stopAndResetAudio(); // Остановка аудио при нажатии на кнопку "Следующий"
+			stopAndResetAudio();
 			if (items.length > 0 && currentIndex < items.length - 1) {
 					currentIndex++;
 			} else if (currentFilter === 'tag' && currentIndex === items.length - 1) {
@@ -70,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	});
 
 	const imagesCache = {};
-	
+
 	function appendItem() {
 			const selectedItem = items[currentIndex].cloneNode(true);
 			const id = selectedItem.getAttribute('id');
@@ -79,36 +77,42 @@ document.addEventListener("DOMContentLoaded", function () {
 					p.style.display = 'none';
 			}
 
-			// Создаем кнопку для воспроизведения звука
-			const soundButton = document.createElement('button');
-			soundButton.className = 'info__sound';
-			soundButton.textContent = 'Play';
-			selectedItem.appendChild(soundButton);
+			
+			if (items.length > 0) {
+					const soundButton = document.createElement('button');
+					soundButton.className = 'info__sound';
+					soundButton.textContent = 'Play';
+					selectedItem.appendChild(soundButton);
 
-			soundButton.onclick = function () {
-					const soundFile = `sounds/${id}.wav`; // Путь к аудиофайлу
+					soundButton.onclick = function () {
+							const soundFile = `sounds/${id}.wav`; 
 
-					if (audioCache[soundFile]) {
-							// Если аудиофайл уже в кэше
-							currentAudio = audioCache[soundFile];
-					} else {
-							// Если это новый аудиофайл, создаем новый объект Audio и кэшируем его
-							currentAudio = new Audio(soundFile);
-							audioCache[soundFile] = currentAudio; // Сохраняем в кэше
-					}
+							if (audioCache[soundFile]) {
+									currentAudio = audioCache[soundFile];
+							} else {
+									currentAudio = new Audio(soundFile);
+									audioCache[soundFile] = currentAudio; 
+							}
 
-					if (currentAudio.paused) {
-							currentAudio.play();
-							soundButton.textContent = 'Pause'; // Меняем текст на "Pause"
-					} else {
-							currentAudio.pause();
-							soundButton.textContent = 'Play'; // Меняем текст на "Play"
-					}
+							currentAudio.onerror = function () {
+									console.log("No corresponding file");
+							};
 
-					currentAudio.onended = function () {
-							soundButton.textContent = 'Play'; // Меняем текст кнопки на "Play" при завершении
+							if (currentAudio.paused) {
+									currentAudio.play().then(() => {
+											soundButton.textContent = 'Pause';
+									}).catch(error => {
+											console.error("Error playing sound:", error);
+									});
+							} else {
+									currentAudio.pause();
+									soundButton.textContent = 'Play';
+							}
+							currentAudio.onended = function () {
+									soundButton.textContent = 'Play';
+							};
 					};
-			};
+			}
 
 			if (!imagesCache[id]) {
 					const img = new Image();
@@ -145,9 +149,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	function stopAndResetAudio() {
 			if (currentAudio) {
-					currentAudio.pause(); // Остановить аудио
-					currentAudio.currentTime = 0; // Сбросить аудио
-					currentAudio = null; // Сбросить текущий аудио
+					currentAudio.pause(); 
+					currentAudio.currentTime = 0; 
+					currentAudio = null; 
 			}
 	}
 });
