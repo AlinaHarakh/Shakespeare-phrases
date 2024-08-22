@@ -213,7 +213,12 @@ h2 {
 }
 .undefined {
 	/* background-color: #890505; */
-	height: 15px;
+	height: 35px;
+}
+.undefined + .text-content::first-letter{
+	color: #005E31;
+	font-weight: 700;
+	font-size: 40px;
 }
 @media(max-width: 1200px) {
 	.content__inner {
