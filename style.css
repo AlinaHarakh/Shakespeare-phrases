@@ -213,7 +213,7 @@ h2 {
 }
 .undefined {
 	/* background-color: #890505; */
-	height: 35px;
+	height: 40px;
 }
 .undefined + .text-content::first-letter{
 	color: #005E31;
