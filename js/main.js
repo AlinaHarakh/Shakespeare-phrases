@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			appendItem();
 	});
 
-	const imagesCache = {};
+	// const imagesCache = {};
 
 	function appendItem() {
 			const selectedItem = items[currentIndex].cloneNode(true);
@@ -156,6 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 });
 
+
 (function () {
 	function excelToJson() {
 			return new Promise((resolve, reject) => {
@@ -184,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					li.setAttribute('data-category', row[1]);
 					let content = '';
 					for (let i = 2; i < row.length; i++) {
-							content += `<p class="text-content">${row[i]}</p>`;
+							content += row[i] !== undefined ? `<p class="text-content">${row[i]}</p>` : '<p class="undefined"></p>';
 					}
 					li.innerHTML = content;
 					items.appendChild(li);
