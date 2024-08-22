@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			appendItem();
 	});
 
-	// const imagesCache = {};
+	const imagesCache = {};
 
 	function appendItem() {
 			const selectedItem = items[currentIndex].cloneNode(true);
@@ -155,6 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 	}
 });
+
 
 
 (function () {
