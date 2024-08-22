@@ -156,78 +156,6 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 });
 
-// (function () {
-// 	function excelToJson() {
-// 			return new Promise((resolve, reject) => {
-// 					const xhr = new XMLHttpRequest();
-// 					xhr.open('GET', './texts_fin.xlsx', true);
-// 					xhr.responseType = 'arraybuffer';
-// 					xhr.onload = function (e) {
-// 							const data = new Uint8Array(xhr.response);
-// 							const workbook = XLSX.read(data, { type: 'array' });
-// 							const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-// 							const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-// 							resolve(json);
-// 					};
-// 					xhr.onerror = function (e) {
-// 							reject(e);
-// 					};
-// 					xhr.send();
-// 			});
-// 	}
-
-// 	excelToJson().then((jsonData) => {
-// 			const items = document.getElementById('items');
-// 			jsonData.forEach((row) => {
-// 					const li = document.createElement('li');
-// 					li.id = row[0];
-// 					li.setAttribute('data-category', row[1]);
-// 					let content = '';
-// 					for (let i = 2; i < row.length; i++) {
-// 							content += `<p class="text-content">${row[i]}</p>`;
-// 					}
-// 					li.innerHTML = content;
-// 					items.appendChild(li);
-// 			});
-// 			return fetchTags();
-// 	}).then(tags => {
-// 			for (const tag of tags) {
-// 					const ids = tag.content[0].split(', ');
-// 					for (const id of ids) {
-// 							const item = document.querySelector(`[id="${id}"]`);
-// 							if (item) {
-// 									item.setAttribute('data-tag', tag.name);
-// 							}
-// 					}
-// 			}
-// 	});
-
-// 	function fetchTags() {
-// 			return new Promise((resolve, reject) => {
-// 					fetch('./stich_finale.txt')
-// 							.then(response => response.text())
-// 							.then(text => {
-// 									const lines = text.split('\n');
-// 									const arrayMap = new Map();
-// 									lines.forEach(line => {
-// 											const words = line.trim().split(' ');
-// 											const arrayName = String(words[0]).toLowerCase();
-// 											const arrayContent = words.slice(1).join(' ');
-// 											if (!arrayMap.has(arrayName)) {
-// 													arrayMap.set(arrayName, []);
-// 											}
-// 											arrayMap.get(arrayName).push(arrayContent);
-// 									});
-// 									const resultArray = Array.from(arrayMap, ([name, content]) => ({ name, content }));
-// 									resolve(resultArray);
-// 							})
-// 							.catch(error => {
-// 									reject(error);
-// 							});
-// 			});
-// 	}
-// })();
-
 (function () {
 	function excelToJson() {
 			return new Promise((resolve, reject) => {
@@ -256,7 +184,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					li.setAttribute('data-category', row[1]);
 					let content = '';
 					for (let i = 2; i < row.length; i++) {
-							content += row[i] !== undefined ? `<p class="text-content">${row[i]}</p>` : '<p class="undefined"></p>';
+							content += `<p class="text-content">${row[i]}</p>`;
 					}
 					li.innerHTML = content;
 					items.appendChild(li);
