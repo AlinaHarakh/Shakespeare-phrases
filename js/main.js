@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					selectedItem.appendChild(soundButton);
 
 					soundButton.onclick = function () {
-							const soundFile = `sounds/${id}.wav`; 
+							const soundFile = `sounds/Aufnahme ${id}.mp3`; 
 
 							if (audioCache[soundFile]) {
 									currentAudio = audioCache[soundFile];
