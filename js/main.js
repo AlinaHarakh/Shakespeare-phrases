@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					selectedItem.appendChild(soundButton);
 
 					soundButton.onclick = function () {
-							const soundFile = `sounds/Aufnahme ${id}.mp3`; 
+							const soundFile = `sounds/${id}.mp3`; 
 
 							if (audioCache[soundFile]) {
 									currentAudio = audioCache[soundFile];
@@ -182,10 +182,10 @@ document.addEventListener("DOMContentLoaded", function () {
 			const items = document.getElementById('items');
 			jsonData.forEach((row) => {
 					const li = document.createElement('li');
-					li.id = row[0];
+					li.id = row[2];
 					li.setAttribute('data-category', row[1]);
 					let content = '';
-					for (let i = 2; i < row.length; i++) {
+					for (let i = 3; i < row.length; i++) {
 							content += row[i] !== undefined ? `<p class="text-content">${row[i]}</p>` : '<p class="undefined"></p>';
 					}
 					li.innerHTML = content;
