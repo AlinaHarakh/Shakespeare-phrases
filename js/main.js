@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
 							return;
 					}
 					if (items.length > 0) {
-						currentFilter === 'category' ? currentIndex = Math.floor(Math.random() * items.length) : currentIndex = 0;
+							currentIndex = 0;
 							appendItem();
 							midColumn.style.display = "flex";
 					}
