@@ -67,14 +67,13 @@ document.addEventListener("DOMContentLoaded", function () {
 			appendItem();
 	});
 
-	const imagesCache = {};
 
 	function appendItem() {
 			const selectedItem = items[currentIndex].cloneNode(true);
 			const id = selectedItem.getAttribute('id');
 			const ps = selectedItem.querySelectorAll('p');
 			for (const p of ps) {
-					p.style.display = 'none';
+					p.style.display = 'block';
 			}
 
 			
@@ -114,37 +113,8 @@ document.addEventListener("DOMContentLoaded", function () {
 					};
 			}
 
-			if (!imagesCache[id]) {
-					const img = new Image();
-					img.src = `images/${id}.png`;
-					img.classList.add('img-content');
-					img.style.display = 'none';
-					img.onload = () => {
-							img.style.display = 'block';
-							imagesCache[id] = img;
-					};
-					img.onerror = () => {
-							const imgJPG = new Image();
-							imgJPG.src = `images/${id}.jpg`;
-							imgJPG.classList.add('img-content');
-							imgJPG.style.display = 'none';
-							imgJPG.onload = () => {
-									imgJPG.style.display = 'block';
-									imagesCache[id] = imgJPG;
-							};
-							imgJPG.onerror = () => {
-									for (const p of ps) {
-											p.style.display = 'block';
-									}
-							};
-							selectedItem.appendChild(imgJPG);
-					};
-					selectedItem.appendChild(img);
-			} else {
-					selectedItem.appendChild(imagesCache[id]);
-			}
-
 			infoText.appendChild(selectedItem);
+			
 	}
 
 	function stopAndResetAudio() {
