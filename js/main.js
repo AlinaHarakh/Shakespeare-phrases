@@ -22,7 +22,13 @@ document.addEventListener("DOMContentLoaded", function () {
 					currentFilter = button.classList.contains('category-btn') ? 'category' : 'tag';
 					const clickedButtonId = button.id;
 					const dataKey = button.classList.contains('category-btn') ? 'category' : 'tag';
-					items = Array.from(document.querySelectorAll(`[data-${dataKey}*="${clickedButtonId}"]`));
+					// items = Array.from(document.querySelectorAll(`[data-${dataKey}*="${clickedButtonId}"]`));
+					items = Array.from(document.querySelectorAll(`[data-${dataKey}]`)).filter(item => {
+						const tags = item.getAttribute(`data-${dataKey}`).split(' ');
+						return tags.includes(clickedButtonId);
+					});
+					
+
 					infoText.innerHTML = "";
 					let buttonsDisplay = items.length > 1 ? 'block' : 'none';
 					prevButton.style.display = buttonsDisplay;
@@ -173,27 +179,27 @@ document.addEventListener("DOMContentLoaded", function () {
 	});
 
 	function fetchTags() {
-			return new Promise((resolve, reject) => {
-					fetch('./stich_finale.txt')
-							.then(response => response.text())
-							.then(text => {
-									const lines = text.split('\n');
-									const arrayMap = new Map();
-									lines.forEach(line => {
-											const words = line.trim().split(' ');
-											const arrayName = String(words[0]).toLowerCase();
-											const arrayContent = words.slice(1).join(' ');
-											if (!arrayMap.has(arrayName)) {
-													arrayMap.set(arrayName, []);
-											}
-											arrayMap.get(arrayName).push(arrayContent);
-									});
-									const resultArray = Array.from(arrayMap, ([name, content]) => ({ name, content }));
-									resolve(resultArray);
-							})
-							.catch(error => {
-									reject(error);
-							});
-			});
-	}
+		return new Promise((resolve, reject) => {
+				fetch('./stich_finale.txt')
+						.then(response => response.text())
+						.then(text => {
+								const lines = text.split('\n');
+								const arrayMap = new Map();
+								lines.forEach(line => {
+										const words = line.trim().split(' ');
+										const arrayName = String(words[0]).toLowerCase();
+										const arrayContent = words.slice(1).join(' ');
+										if (!arrayMap.has(arrayName)) {
+												arrayMap.set(arrayName, []);
+										}
+										arrayMap.get(arrayName).push(arrayContent);
+								});
+								const resultArray = Array.from(arrayMap, ([name, content]) => ({ name, content }));
+								resolve(resultArray);
+						})
+						.catch(error => {
+								reject(error);
+						});
+		});
+}
 })();
