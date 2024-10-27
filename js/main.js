@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					currentFilter = button.classList.contains('category-btn') ? 'category' : 'tag';
 					const clickedButtonId = button.id;
 					const dataKey = button.classList.contains('category-btn') ? 'category' : 'tag';
-					items = Array.from(document.querySelectorAll(`[data-${dataKey}="${clickedButtonId}"]`));
+					items = Array.from(document.querySelectorAll(`[data-${dataKey}*="${clickedButtonId}"]`));
 					infoText.innerHTML = "";
 					let buttonsDisplay = items.length > 1 ? 'block' : 'none';
 					prevButton.style.display = buttonsDisplay;
@@ -149,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					const li = document.createElement('li');
 					li.id = row[2];
 					li.setAttribute('data-category', row[1]);
-					li.setAttribute('data-tag-id', row[0]); // Store the first column value
+					li.setAttribute('data-first-column', row[0]); // Store the first column value
 					let content = '';
 					for (let i = 3; i < row.length; i++) {
 							content += row[i] !== undefined ? `<p class="text-content">${row[i]}</p>` : '<p class="undefined"></p>';
@@ -162,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			for (const tag of tags) {
 					const ids = tag.content[0].split(', ');
 					for (const id of ids) {
-							const item = document.querySelector(`[data-tag-id="${id}"]`);
+							const item = document.querySelector(`[data-first-column="${id}"]`);
 							if (item) {
 									let existingTags = item.getAttribute('data-tag') || '';
 									existingTags += existingTags ? ` ${tag.name}` : tag.name;
