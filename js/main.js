@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", function () {
 	let currentIndex = 0;
 	let items = [];
 	let currentFilter = '';
-	let currentAudio = null; 
-	const audioCache = {}; 
+	let currentAudio = null;
+	const audioCache = {};
 	midColumn.style.display = "none";
 
 	buttons.forEach(function (button) {
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	});
 
 	prevButton.addEventListener("click", function () {
-			stopAndResetAudio(); 
+			stopAndResetAudio();
 			if (items.length > 0 && currentIndex > 0) {
 					currentIndex--;
 			} else if (currentFilter === 'tag' && currentIndex == 0) {
@@ -67,7 +67,6 @@ document.addEventListener("DOMContentLoaded", function () {
 			appendItem();
 	});
 
-
 	function appendItem() {
 			const selectedItem = items[currentIndex].cloneNode(true);
 			const id = selectedItem.getAttribute('id');
@@ -76,7 +75,6 @@ document.addEventListener("DOMContentLoaded", function () {
 					p.style.display = 'block';
 			}
 
-			
 			if (items.length > 0) {
 					const soundButton = document.createElement('button');
 					soundButton.className = 'info__sound';
@@ -84,13 +82,13 @@ document.addEventListener("DOMContentLoaded", function () {
 					selectedItem.appendChild(soundButton);
 
 					soundButton.onclick = function () {
-							const soundFile = `sounds/${id}.mp3`; 
+							const soundFile = `sounds/${id}.mp3`;
 
 							if (audioCache[soundFile]) {
 									currentAudio = audioCache[soundFile];
 							} else {
 									currentAudio = new Audio(soundFile);
-									audioCache[soundFile] = currentAudio; 
+									audioCache[soundFile] = currentAudio;
 							}
 
 							currentAudio.onerror = function () {
@@ -114,19 +112,16 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 
 			infoText.appendChild(selectedItem);
-			
 	}
 
 	function stopAndResetAudio() {
 			if (currentAudio) {
-					currentAudio.pause(); 
-					currentAudio.currentTime = 0; 
-					currentAudio = null; 
+					currentAudio.pause();
+					currentAudio.currentTime = 0;
+					currentAudio = null;
 			}
 	}
 });
-
-
 
 (function () {
 	function excelToJson() {
@@ -154,6 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					const li = document.createElement('li');
 					li.id = row[2];
 					li.setAttribute('data-category', row[1]);
+					li.setAttribute('data-tag-id', row[0]); // Store the first column value
 					let content = '';
 					for (let i = 3; i < row.length; i++) {
 							content += row[i] !== undefined ? `<p class="text-content">${row[i]}</p>` : '<p class="undefined"></p>';
@@ -166,9 +162,11 @@ document.addEventListener("DOMContentLoaded", function () {
 			for (const tag of tags) {
 					const ids = tag.content[0].split(', ');
 					for (const id of ids) {
-							const item = document.querySelector(`[id="${id}"]`);
+							const item = document.querySelector(`[data-tag-id="${id}"]`);
 							if (item) {
-									item.setAttribute('data-tag', tag.name);
+									let existingTags = item.getAttribute('data-tag') || '';
+									existingTags += existingTags ? ` ${tag.name}` : tag.name;
+									item.setAttribute('data-tag', existingTags);
 							}
 					}
 			}
