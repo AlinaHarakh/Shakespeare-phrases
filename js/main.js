@@ -9,6 +9,9 @@ document.addEventListener("DOMContentLoaded", function () {
 	let currentFilter = '';
 	let currentAudio = null;
 	const audioCache = {};
+	let resultArray = [];
+	let dynamicArrays = {};
+
 	midColumn.style.display = "none";
 
 	buttons.forEach(function (button) {
@@ -22,12 +25,27 @@ document.addEventListener("DOMContentLoaded", function () {
 					currentFilter = button.classList.contains('category-btn') ? 'category' : 'tag';
 					const clickedButtonId = button.id;
 					const dataKey = button.classList.contains('category-btn') ? 'category' : 'tag';
-					// items = Array.from(document.querySelectorAll(`[data-${dataKey}*="${clickedButtonId}"]`));
 					items = Array.from(document.querySelectorAll(`[data-${dataKey}]`)).filter(item => {
-						const tags = item.getAttribute(`data-${dataKey}`).split(' ');
-						return tags.includes(clickedButtonId);
+							const tags = item.getAttribute(`data-${dataKey}`).split(' ');
+							return tags.includes(clickedButtonId);
 					});
-					
+
+					if (currentFilter === 'tag') {
+						const tagName = button.textContent.trim().toLowerCase();
+						const dynamicArray = dynamicArrays[clickedButtonId];
+						console.log(dynamicArray);
+				
+						if (dynamicArray) {
+								const wordsArray = dynamicArray.join(' ').split(', ').map(word => word.trim());
+								items = wordsArray.map(value => {
+										const item = items.find(item => item.getAttribute('data-first-column') === value);
+										if (item) {
+												// console.log(item.getAttribute('data-first-column'));
+										}
+										return item;
+								}).filter(item => item !== undefined);
+						}
+				}
 
 					infoText.innerHTML = "";
 					let buttonsDisplay = items.length > 1 ? 'block' : 'none';
@@ -127,79 +145,98 @@ document.addEventListener("DOMContentLoaded", function () {
 					currentAudio = null;
 			}
 	}
-});
 
-(function () {
-	function excelToJson() {
-			return new Promise((resolve, reject) => {
-					const xhr = new XMLHttpRequest();
-					xhr.open('GET', './texts_fin.xlsx', true);
-					xhr.responseType = 'arraybuffer';
-					xhr.onload = function (e) {
-							const data = new Uint8Array(xhr.response);
-							const workbook = XLSX.read(data, { type: 'array' });
-							const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-							const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-							resolve(json);
-					};
-					xhr.onerror = function (e) {
-							reject(e);
-					};
-					xhr.send();
-			});
-	}
+	(function () {
+			function excelToJson() {
+					return new Promise((resolve, reject) => {
+							const xhr = new XMLHttpRequest();
+							xhr.open('GET', './texts_fin.xlsx', true);
+							xhr.responseType = 'arraybuffer';
+							xhr.onload = function (e) {
+									const data = new Uint8Array(xhr.response);
+									const workbook = XLSX.read(data, { type: 'array' });
+									const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+									const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+									resolve(json);
+							};
+							xhr.onerror = function (e) {
+									reject(e);
+							};
+							xhr.send();
+					});
+			}
 
-	excelToJson().then((jsonData) => {
-			const items = document.getElementById('items');
-			jsonData.forEach((row) => {
-					const li = document.createElement('li');
-					li.id = row[2];
-					li.setAttribute('data-category', row[1]);
-					li.setAttribute('data-first-column', row[0]); // Store the first column value
-					let content = '';
-					for (let i = 3; i < row.length; i++) {
-							content += row[i] !== undefined ? `<p class="text-content">${row[i]}</p>` : '<p class="undefined"></p>';
-					}
-					li.innerHTML = content;
-					items.appendChild(li);
-			});
-			return fetchTags();
-	}).then(tags => {
-			for (const tag of tags) {
-					const ids = tag.content[0].split(', ');
-					for (const id of ids) {
-							const item = document.querySelector(`[data-first-column="${id}"]`);
-							if (item) {
-									let existingTags = item.getAttribute('data-tag') || '';
-									existingTags += existingTags ? ` ${tag.name}` : tag.name;
-									item.setAttribute('data-tag', existingTags);
+			excelToJson().then((jsonData) => {
+					const itemsContainer = document.getElementById('items');
+					jsonData.forEach((row) => {
+							const li = document.createElement('li');
+							li.id = row[2];
+							li.setAttribute('data-category', row[1]);
+							li.setAttribute('data-first-column', row[0]); // Store the first column value
+							let content = '';
+							for (let i = 3; i < row.length; i++) {
+									content += row[i] !== undefined ? `<p class="text-content">${row[i]}</p>` : '<p class="undefined"></p>';
+							}
+							li.innerHTML = content;
+							itemsContainer.appendChild(li);
+					});
+					return fetchTags();
+			}).then(tags => {
+					for (const tag of tags) {
+							const ids = tag.content[0].split(', ');
+							for (const id of ids) {
+									const item = document.querySelector(`[data-first-column="${id}"]`);
+									if (item) {
+											let existingTags = item.getAttribute('data-tag') || '';
+											existingTags += existingTags ? ` ${tag.name}` : tag.name;
+											item.setAttribute('data-tag', existingTags);
+									}
 							}
 					}
-			}
-	});
+			});
 
-	function fetchTags() {
-		return new Promise((resolve, reject) => {
-				fetch('./stich_finale.txt')
-						.then(response => response.text())
-						.then(text => {
-								const lines = text.split('\n');
-								const arrayMap = new Map();
-								lines.forEach(line => {
-										const words = line.trim().split(' ');
-										const arrayName = String(words[0]).toLowerCase();
-										const arrayContent = words.slice(1).join(' ');
-										if (!arrayMap.has(arrayName)) {
-												arrayMap.set(arrayName, []);
-										}
-										arrayMap.get(arrayName).push(arrayContent);
+			function fetchTags() {
+				return new Promise((resolve, reject) => {
+						fetch('./stich_finale.txt')
+								.then(response => response.text())
+								.then(text => {
+										const lines = text.split('\n');
+										const arrayMap = new Map();
+										lines.forEach(line => {
+												const words = line.trim().split(' ');
+												let arrayName;
+												let arrayContent;
+		
+												if (words.length === 2) {
+														arrayName = words[0].toLowerCase();
+														arrayContent = words[1];
+												} else if (words.length > 2 && !words[0].includes(',') && !words[1].includes(',')) {
+														arrayName = `${words[0].toLowerCase()}-${words[1].toLowerCase()}`;
+														arrayContent = words.slice(2).join(' ');
+												} else {
+														arrayName = words[0].toLowerCase();
+														arrayContent = words.slice(1).join(' ');
+												}
+		
+												if (!arrayMap.has(arrayName)) {
+														arrayMap.set(arrayName, []);
+												}
+												arrayMap.get(arrayName).push(arrayContent);
+										});
+		
+										resultArray = Array.from(arrayMap, ([name, content]) => ({ name, content }));
+										resolve(resultArray);
+		
+										resultArray.forEach(item => {
+												dynamicArrays[item.name] = item.content;
+										});
+		
+										// console.log(dynamicArrays);
+								})
+								.catch(error => {
+										reject(error);
 								});
-								const resultArray = Array.from(arrayMap, ([name, content]) => ({ name, content }));
-								resolve(resultArray);
-						})
-						.catch(error => {
-								reject(error);
-						});
-		});
-}
-})();
+				});
+		}
+	})();
+});
